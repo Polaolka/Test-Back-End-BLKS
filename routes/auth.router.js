@@ -5,9 +5,14 @@ const router = express.Router();
 // ----AUTH ROUTER -----
 
 // POST
-router.post(
+// router.post(
+//   '/',
+//   AuthController.createUser
+// );
+
+router.get(
   '/',
-  AuthController.createUser
+  AuthController.getAllUsers
 );
 
 
