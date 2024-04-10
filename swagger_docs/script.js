@@ -13,6 +13,10 @@ class Swagger {
       servers: [
         {
           url: 'https://localhost:4000/api/v0',
+          description: 'Local  API',
+        },
+        {
+          url: 'https://test-back-end-blks.onrender.com/api/v0',
           description: 'Main  API',
         },
       ],

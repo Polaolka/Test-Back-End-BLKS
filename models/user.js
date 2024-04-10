@@ -35,10 +35,6 @@ const userSchema = new Schema(
       type: String,
       default: '',
     },
-    twitterUrl: {
-      type: String,
-      default: '',
-    },
   },
   { versionKey: false, timestamps: true }
 );

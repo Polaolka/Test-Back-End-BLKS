@@ -11,7 +11,7 @@ const {
 } = require('../commonFieldsRefs');
 
 // create user
-const createUserRespDTO = Joi.object({
+const getCurrentUserRespDTO = Joi.object({
   _id: _id.required(),
   name: name.required(),
   email: email.required(),
@@ -28,4 +28,10 @@ const getUserRespDTO = Joi.object({
 // get all users
 const getAllUsersRespDTO = Joi.array().items(getUserRespDTO);
 
-module.exports = { createUserRespDTO, getAllUsersRespDTO};
+// google callback
+const googleCallbackRespDTO = Joi.object({
+  accessToken: accessToken.required(),
+  refreshToken: refreshToken.required(),
+}).messages(ERROR_DTO_PATTERNS);
+
+module.exports = { getCurrentUserRespDTO, getAllUsersRespDTO, googleCallbackRespDTO};
