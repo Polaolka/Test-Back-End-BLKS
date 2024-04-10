@@ -1,5 +1,5 @@
 {
-  "name": "lending-requesty-back",
+  "name": "Test-BackEnd-BLKS",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,7 +13,7 @@
     "list": "eslint  **/*.js",
     "swagger": "node ./swagger_docs/script.js"
   },
-  "author": "3B-solutions",
+  "author": "Olga Polishchuk",
   "license": "ISC",
   "dependencies": {
     "@joi/date": "^2.1.0",
