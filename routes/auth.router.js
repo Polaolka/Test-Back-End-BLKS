@@ -10,10 +10,10 @@ const router = express.Router();
 //   AuthController.createUser
 // );
 
-router.get(
-  '/',
-  AuthController.getAllUsers
-);
+router.get('/', AuthController.getAllUsers);
 
+router.get('/google', AuthController.google);
+
+router.get('/google/callback', AuthController.googleCallback)
 
 module.exports = router;

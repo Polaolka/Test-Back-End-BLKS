@@ -19,7 +19,13 @@ const createUserRespDTO = Joi.object({
   refreshToken: refreshToken.required(),
 }).messages(ERROR_DTO_PATTERNS);
 
+const getUserRespDTO = Joi.object({
+  _id: _id.required(),
+  name: name.required(),
+  email: email.required(),
+}).messages(ERROR_DTO_PATTERNS);
+
 // get all users
-const getAllUsersRespDTO = Joi.array().items(createUserRespDTO);
+const getAllUsersRespDTO = Joi.array().items(getUserRespDTO);
 
 module.exports = { createUserRespDTO, getAllUsersRespDTO};
