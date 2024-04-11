@@ -37,7 +37,7 @@ class Mapper {
     if (data && data.hasOwnProperty('body')) {
       const { body, params, query, files, id } = data;
       result = { id, ...body, ...params, ...query, files};
-      console.log('id:', id);
+      // console.log('id:', id);
       if (pagination) {
         result = { ...result, ...request.getPagination(query) };
       }

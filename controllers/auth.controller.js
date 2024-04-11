@@ -46,6 +46,9 @@ class Auth {
     try {
       const { code } = req.query;
       const userData = await AuthService.loginFfomGoogle(code);
+      if (!userData) {
+        throw HttpException.BAD_REQUEST();
+      }
       const { accessToken, refreshToken } = userData;
       res.redirect(
         `http://localhost:3000/BLKS-front-test/${accessToken}/${refreshToken}`

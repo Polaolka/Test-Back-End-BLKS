@@ -5,6 +5,7 @@ const { uuid } = require('uuidv4');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const HttpException = require('../helpers/HttpException.helper');
+const authHelper = require('../helpers/auth.helper');
 
 const ACCESS_SECRET_KEY = process.env.ACCESS_SECRET_KEY?.toString() || '';
 const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY?.toString() || '';
@@ -49,7 +50,7 @@ class Auth {
           accessToken,
           refreshToken,
         });
-        console.log('accessToken:', accessToken);
+        console.log('accessToken in create user:', accessToken);
         return {
           accessToken,
           refreshToken,
@@ -95,27 +96,28 @@ class Auth {
 
   async refreshUser(RequestDTO) {
     const oldRefreshToken = RequestDTO.refreshToken;
-    const verifiedToken = jwt.verify(oldRefreshToken, REFRESH_SECRET_KEY);
-    if (typeof verifiedToken === 'string') {
-      throw HttpException.UNAUTHORIZED();
-    } else {
-      const { id } = verifiedToken;
-      const user = await User.findById({ _id: id });
-      if (!user) {
-        throw HttpException.BAD_REQUEST();
-      }
-      const payload = { id };
+    const payload = await authHelper.validateToken({
+      type: 'REFRESH',
+      token: oldRefreshToken,
+    });
+    console.log('payload!:', payload);
 
-      const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-        expiresIn: accessTokenExpiresIn,
-      });
-      const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
-        expiresIn: refreshTokenExpiresIn,
-      });
-
-      await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
-      return { accessToken, refreshToken };
+    const { id } = payload;
+    const user = await User.findById({ _id: id });
+    if (!user) {
+      throw HttpException.BAD_REQUEST();
     }
+
+    const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
+      expiresIn: accessTokenExpiresIn,
+    });
+    const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
+      expiresIn: refreshTokenExpiresIn,
+    });
+
+    await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
+    
+    return { accessToken, refreshToken };
   }
 
   async getCurrentUser(RequestDTO) {
@@ -123,7 +125,7 @@ class Auth {
       '-password -createdAt -updatedAt'
     );
     if (!user) {
-      throw HttpException.UNAUTHORIZED();
+      throw HttpException.BAD_REQUEST();
     }
     return user;
   }

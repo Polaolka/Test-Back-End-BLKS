@@ -13,7 +13,7 @@ const userSchema = new Schema(
       type: String,
       required: [true, 'Set name'],
       minlength: 1,
-      maxlength: 16,
+      maxlength: 30,
     },
     password: {
       type: String,

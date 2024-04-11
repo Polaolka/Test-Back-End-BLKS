@@ -19,7 +19,7 @@ router.get('/google/callback', AuthController.googleCallback)
 
 router.get('/current', authenticateMiddleware.authenticate, AuthController.getCurrentUser)
 
-router.post('/refresh',  authenticateMiddleware.checkRefresh, AuthController.refreshUser)
+router.post('/refresh', AuthController.refreshUser)
 
 router.post('/logout',  authenticateMiddleware.authenticate, AuthController.logoutUser)
 

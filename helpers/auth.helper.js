@@ -15,17 +15,20 @@ class Auth {
       }
       const secret = types[type];
       const payload = jwt.verify(token, secret);
-
-      return payload;
-    } catch (e) {
-      if (e.message === 'jwt expired') {
+      if (typeof payload === 'string') {
+        throw HttpException.BAD_REQUEST();
+      }
+      // Перевірка терміну дії токена перед викиданням помилки
+      if (type === 'ACCESS' && payload.exp < Date.now() / 1000) {
         throw HttpException.UNAUTHORIZED(`${type} token expired`);
       }
+      return payload;
+    } catch (e) {
       console.log(
         '======================================================================'
       );
-      console.log("e.message", e.message)
-      throw HttpException.BAD_REQUEST();
+      console.log('e.message', e.message);
+      throw HttpException.BAD_REQUEST(`${e.message}`);
     }
   }
 
@@ -36,7 +39,7 @@ class Auth {
     const { Authorization, authorization } = headers;
     const bearerToken = Authorization || authorization;
     if (!bearerToken) {
-      throw HttpException.UNAUTHORIZED('Token are required');
+      throw HttpException.BAD_REQUEST('Token are required');
     }
 
     return bearerToken;

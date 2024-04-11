@@ -1,4 +1,5 @@
 const axios = require("axios");
+const HttpException = require("../helpers/HttpException.helper");
 
 class GoogleAuth {
   constructor() {
@@ -18,9 +19,9 @@ class GoogleAuth {
           access_type: 'online',
           code,
           grant_type: 'authorization_code',
-        }
+        },
+        { timeout: 5000 } // Таймаут у мілісекундах (в даному випадку 5 секунд)
       );
-      // console.log("tokenResponse.data:", tokenResponse.data);
 
       const { access_token } = tokenResponse.data;
 
@@ -30,15 +31,22 @@ class GoogleAuth {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
+          timeout: 5000 // Таймаут у мілісекундах (в даному випадку 5 секунд)
         }
       );
 
       const { name, email } = profileResponse.data;
-      // console.log("profileResponse.data:", profileResponse.data);
       return { name, email };
     } catch (error) {
-      console.error('Error while fetching user info:', error);
-      throw error;
+      if (error.code === 'ECONNABORTED') {
+        // помилка, яка виникла через таймаут запиту
+        console.error('Request timed out:', error);
+        throw HttpException.UPGRADE_REQUIRED('Request timed out');
+      } else {
+        // Інші типи помилок
+        console.error('Error while fetching user info:', error);
+        throw HttpException.INTERNAL_SERVER_ERROR('Error while fetching user info');
+      }
     }
   }
 }
