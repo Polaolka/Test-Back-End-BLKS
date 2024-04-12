@@ -10,7 +10,7 @@ const authMiddleware = require('../middlewares/authenticate.middleware');
 const AuthService = require('../services/AuthService');
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID?.toString() || '';
-const BASE_FRONTEND_URL =  process.env.BASE_FRONTEND_URL?.toString() || 'http://localhost:4000/BLKS-front-test';
+const BASE_FRONTEND_URL =  process.env.BASE_FRONTEND_URL?.toString() || 'http://localhost:3000/BLKS-front-test';
 const BASE_URL = process.env.BASE_URL || '';
 const redirectUri = `${BASE_URL}/auth/google/callback`;
 const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=profile%20https://www.googleapis.com/auth/userinfo.email`;
@@ -52,7 +52,7 @@ class Auth {
       }
       const { accessToken, refreshToken } = userData;
       res.redirect(
-        `${BASE_FRONTEND_URL}/${accessToken}/${refreshToken}`
+        `${BASE_FRONTEND_URL}/handleAuth/?accessToken=${accessToken}&refreshToken=${refreshToken}`
       );
     } catch (e) {
       // console.log('error:', e);
