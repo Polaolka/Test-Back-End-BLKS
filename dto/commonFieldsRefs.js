@@ -9,11 +9,12 @@ const {
 const AUTH_FIELDS_REFS = {
   _id: Joi.any(),
   id: Joi.any(),
-  name: Joi.string().min(2).max(100).regex(REGULAR_EXPRESSIONS.NAME_REGEX),
+  name: Joi.string().min(2).max(100),
   email: Joi.string().regex(REGULAR_EXPRESSIONS.EMAIL_REGEX),
   password: Joi.string().min(4).regex(REGULAR_EXPRESSIONS.PASSWORD_REGEX),
   accessToken: Joi.string(),
   refreshToken: Joi.string(),
+  message: Joi.string(),
 };
 // ==== ==== ==== ==== ==== ==== ==== ==== ==== ====
 

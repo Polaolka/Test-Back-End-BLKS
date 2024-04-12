@@ -7,6 +7,7 @@ const {
     email,
     accessToken,
     refreshToken,
+    message
   },
 } = require('../commonFieldsRefs');
 
@@ -23,6 +24,8 @@ const getUserRespDTO = Joi.object({
   _id: _id.required(),
   name: name.required(),
   email: email.required(),
+  accessToken: accessToken.required(),
+  refreshToken: refreshToken.required(),
 }).messages(ERROR_DTO_PATTERNS);
 
 // get all users
@@ -34,4 +37,8 @@ const googleCallbackRespDTO = Joi.object({
   refreshToken: refreshToken.required(),
 }).messages(ERROR_DTO_PATTERNS);
 
-module.exports = { getCurrentUserRespDTO, getAllUsersRespDTO, googleCallbackRespDTO};
+// user logout
+const userLogoutRespDTO = Joi.object({
+  message: message.required(),
+}).messages(ERROR_DTO_PATTERNS);
+module.exports = { getCurrentUserRespDTO, getAllUsersRespDTO, googleCallbackRespDTO, userLogoutRespDTO, getUserRespDTO};

@@ -9,19 +9,21 @@ const authHelper = require('../helpers/auth.helper');
 
 const ACCESS_SECRET_KEY = process.env.ACCESS_SECRET_KEY?.toString() || '';
 const REFRESH_SECRET_KEY = process.env.REFRESH_SECRET_KEY?.toString() || '';
-const accessTokenExpiresIn = '1m';
-const refreshTokenExpiresIn = '10m';
+const accessTokenExpiresIn = '30m';
+const refreshTokenExpiresIn = '7m';
 
 class Auth {
   constructor() {}
 
+  // ---- GET ALL USERS ----
   async getAllUsers() {
     const result = await User.find();
 
     return result;
   }
 
-  async loginFfomGoogle(RequestDTO) {
+  // ---- GOOGLE CALLBACK----
+  async loginFromGoogle(RequestDTO) {
     const code = RequestDTO;
 
     const userProfile = await googleAuth.getUserInfo(RequestDTO);
@@ -84,16 +86,17 @@ class Auth {
     }
   }
 
+  // ---- LOGOUT USER----
   async logoutUser(RequestDTO) {
-    console.log('!!! Logout !!! RequestDTO: ', RequestDTO);
     const result = await User.findByIdAndUpdate(
       { _id: RequestDTO.id },
-      { accessToken: '', refreshToken: '' }
+      { accessToken: '', refreshToken: '' },
+      { new: true }
     );
-
-    return result;
+    return { message: 'logout success' };
   }
 
+  // ---- REFRESH USER ----
   async refreshUser(RequestDTO) {
     const oldRefreshToken = RequestDTO.refreshToken;
     const payload = await authHelper.validateToken({
@@ -115,11 +118,16 @@ class Auth {
       expiresIn: refreshTokenExpiresIn,
     });
 
-    await User.findByIdAndUpdate(user._id, { accessToken, refreshToken });
-    
+    await User.findByIdAndUpdate(
+      user._id,
+      { accessToken, refreshToken },
+      { new: true }
+    ).select('-password -createdAt -updatedAt');
+
     return { accessToken, refreshToken };
   }
 
+  // ---- GET CURRENT USER----
   async getCurrentUser(RequestDTO) {
     const user = await User.findById(RequestDTO.id).select(
       '-password -createdAt -updatedAt'
@@ -127,6 +135,7 @@ class Auth {
     if (!user) {
       throw HttpException.BAD_REQUEST();
     }
+    console.log('user in current:', user);
     return user;
   }
 }

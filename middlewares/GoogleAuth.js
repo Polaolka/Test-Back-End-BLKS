@@ -20,7 +20,7 @@ class GoogleAuth {
           code,
           grant_type: 'authorization_code',
         },
-        { timeout: 5000 } // Таймаут у мілісекундах (в даному випадку 5 секунд)
+        { timeout: 10000 } 
       );
 
       const { access_token } = tokenResponse.data;
@@ -31,7 +31,7 @@ class GoogleAuth {
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
-          timeout: 5000 // Таймаут у мілісекундах (в даному випадку 5 секунд)
+          timeout: 10000
         }
       );
 

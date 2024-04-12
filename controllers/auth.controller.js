@@ -1,16 +1,24 @@
 const mapper = require('../dto/mapper');
-const { getCurrentUserDTO, refreshUserDTO, logoutUserDTO } = require('../dto/requestDTO/auth.dto');
+const {
+  getCurrentUserDTO,
+  refreshUserDTO,
+  logoutUserDTO,
+} = require('../dto/requestDTO/auth.dto');
 const {
   getAllUsersRespDTO,
   googleCallbackRespDTO,
   getCurrentUserRespDTO,
+  userLogoutRespDTO,
+  getUserRespDTO
 } = require('../dto/responseDTO/auth.dto');
 const authMiddleware = require('../middlewares/authenticate.middleware');
 
 const AuthService = require('../services/AuthService');
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID?.toString() || '';
-const BASE_FRONTEND_URL =  process.env.BASE_FRONTEND_URL?.toString() || 'http://localhost:3000/BLKS-front-test';
+const BASE_FRONTEND_URL =
+  process.env.BASE_FRONTEND_URL?.toString() ||
+  'http://localhost:3000/BLKS-front-test';
 const BASE_URL = process.env.BASE_URL || '';
 const redirectUri = `${BASE_URL}/auth/google/callback`;
 const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=profile%20https://www.googleapis.com/auth/userinfo.email`;
@@ -46,7 +54,7 @@ class Auth {
   static async googleCallback(req, res, next) {
     try {
       const { code } = req.query;
-      const userData = await AuthService.loginFfomGoogle(code);
+      const userData = await AuthService.loginFromGoogle(code);
       if (!userData) {
         throw HttpException.BAD_REQUEST();
       }
@@ -67,13 +75,8 @@ class Auth {
       validationSchema: getCurrentUserDTO,
     });
     const result = await AuthService.getCurrentUser(RequestDTO);
-    // const ResponseDTO = await mapper.toResponseDTO({
-    //   result,
-    //   validationSchema: getCurrentUserRespDTO,
-    // });
     res.status(200).json(result);
   }
-
 
   // ---- REFRESH USER ----
   static async refreshUser(req, res, next) {
@@ -82,28 +85,18 @@ class Auth {
       validationSchema: refreshUserDTO,
     });
     const result = await AuthService.refreshUser(RequestDTO);
-    // const ResponseDTO = await mapper.toResponseDTO({
-    //   result,
-    //   validationSchema: getCurrentUserRespDTO,
-    // });
     res.status(200).json(result);
   }
 
-    // ---- GET CURRENT USER----
-    static async logoutUser(req, res, next) {
-      console.log("req:", req);
-      const RequestDTO = await mapper.toRequestDTO({
-        data: req,
-        validationSchema: logoutUserDTO,
-      });
-      console.log('RequestDTO:', RequestDTO);
-      const result = await AuthService.logoutUser(RequestDTO);
-      // const ResponseDTO = await mapper.toResponseDTO({
-      //   result,
-      //   validationSchema: getCurrentUserRespDTO,
-      // });
-      res.status(200).json(result);
-    }
+  // ---- LOGOUT USER----
+  static async logoutUser(req, res, next) {
+    const RequestDTO = await mapper.toRequestDTO({
+      data: req,
+      validationSchema: logoutUserDTO,
+    });
+    const result = await AuthService.logoutUser(RequestDTO);
+    res.status(200).json(result);
+  }
 }
 
 module.exports = Auth;
