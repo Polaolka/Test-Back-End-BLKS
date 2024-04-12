@@ -52,7 +52,7 @@ class Auth {
       }
       const { accessToken, refreshToken } = userData;
       res.redirect(
-        `${BASE_FRONTEND_URL}/handleAuth/?accessToken=${accessToken}&refreshToken=${refreshToken}`
+        `${BASE_FRONTEND_URL}/?accessToken=${accessToken}&refreshToken=${refreshToken}`
       );
     } catch (e) {
       // console.log('error:', e);
