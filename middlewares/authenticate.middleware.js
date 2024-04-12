@@ -13,7 +13,6 @@ class Authenticate {
         type: 'ACCESS',
         token,
       });
-      console.log(token);
 
       req.id = payload.id;
       req.token = token;

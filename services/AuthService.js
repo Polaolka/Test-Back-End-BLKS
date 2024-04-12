@@ -52,7 +52,6 @@ class Auth {
           accessToken,
           refreshToken,
         });
-        console.log('accessToken in create user:', accessToken);
         return {
           accessToken,
           refreshToken,
@@ -103,8 +102,6 @@ class Auth {
       type: 'REFRESH',
       token: oldRefreshToken,
     });
-    console.log('payload!:', payload);
-
     const { id } = payload;
     const user = await User.findById({ _id: id });
     if (!user) {
@@ -135,7 +132,6 @@ class Auth {
     if (!user) {
       throw HttpException.BAD_REQUEST();
     }
-    console.log('user in current:', user);
     return user;
   }
 }

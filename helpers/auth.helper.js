@@ -27,7 +27,6 @@ class Auth {
       console.log(
         '======================================================================'
       );
-      console.log('e.message', e.message);
       throw HttpException.BAD_REQUEST(`${e.message}`);
     }
   }

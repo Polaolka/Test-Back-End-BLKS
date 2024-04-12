@@ -45,7 +45,6 @@ class Auth {
     try {
       res.redirect(googleAuthUrl);
     } catch (e) {
-      // console.log('error:', e);
       next(e);
     }
   }
@@ -63,7 +62,6 @@ class Auth {
         `${BASE_FRONTEND_URL}/?accessToken=${accessToken}&refreshToken=${refreshToken}`
       );
     } catch (e) {
-      // console.log('error:', e);
       next(e);
     }
   }

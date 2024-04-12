@@ -9,7 +9,6 @@ class Mapper {
       const DTO = await this._createDTO({ data, validationSchema, options });
       return DTO;
     } catch (e) {
-      console.log("e.message in mapper", e.message);
       throw HttpException.BAD_REQUEST(e.message);
     }
   }
@@ -23,7 +22,6 @@ class Mapper {
       });
       return DTO;
     } catch (e) {
-      console.log("!!!!! e.message in mapper", e.message);
       throw HttpException.BAD_REQUEST(e.message);
     }
   }
@@ -37,7 +35,6 @@ class Mapper {
     if (data && data.hasOwnProperty('body')) {
       const { body, params, query, files, id } = data;
       result = { id, ...body, ...params, ...query, files};
-      // console.log('id:', id);
       if (pagination) {
         result = { ...result, ...request.getPagination(query) };
       }
